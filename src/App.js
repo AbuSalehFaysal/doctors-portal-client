@@ -1,42 +1,48 @@
-import logo from './logo.svg';
+import React, { createContext, useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Home from './components/Home/Home/Home';
 import Appointment from './components/Appointment/Appointment/Appointment';
-import Login from './components/Login/Login/Login';
-import { createContext, useState } from 'react';
 import Dashboard from './components/Dashboard/Dashboard/Dashboard';
+import Login from './components/Login/Login/Login';
+import AllPatients from './components/AllPatients/AllPatients/AllPatients';
+import PrivateRoute from './components/Login/PrivateRoute/PrivateRoute';
+// import AllPatients from './components/AllPatients/AllPatients/AllPatients';
+import AddDoctor from './components/AddDoctor/AddDoctor';
 
 export const UserContext = createContext();
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState({});
   return (
-    <div>
-      <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
+    <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <Router>
         <Switch>
+          <Route path="/appointment">
+            <Appointment></Appointment>
+          </Route>
+          <PrivateRoute path="/dashboard">
+            <Dashboard></Dashboard>
+          </PrivateRoute>
+          <PrivateRoute path="/allPatients">
+            <AllPatients></AllPatients>
+          </PrivateRoute>
+          <Route path="/addDoctor">
+            <AddDoctor></AddDoctor>
+          </Route>
+          <Route path="/login">
+            <Login></Login>
+          </Route>
           <Route exact path="/">
             <Home></Home>
           </Route>
-          <Route exact path="/appointment">
-            <Appointment></Appointment>
-          </Route>
-          <Route exact path="/dashboard/appointment">
-            <Dashboard></Dashboard>
-          </Route>
-          <Route exact path="/login">
-            <Login></Login>
-          </Route>
         </Switch>
       </Router>
-      </UserContext.Provider>
-    </div>
+    </UserContext.Provider>
   );
 }
 

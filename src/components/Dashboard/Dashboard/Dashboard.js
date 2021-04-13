@@ -3,11 +3,12 @@ import AppointmentByDate from '../AppointmentsByDate/AppointmentByDate';
 import Sidebar from '../Sidebar/Sidebar';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { useEffect } from 'react';
 
 const conatinerStyle = {
     backgroundColor: "F4FDFB",
     height: "100%",
-    marginTop: '100px'
+    marginTop: "15px"
 }
 
 const Dashboard = () => {
@@ -15,29 +16,33 @@ const Dashboard = () => {
     const [appointments, setAppointments] = useState([]);
     const handleDateChange = date => {
         setSelectedDate(date);
+    }
+
+    useEffect(() => {
         fetch('http://localhost:5000/appointmentsByDate', {
             method: 'POST',
-            headers: {'content-type': 'application/json'},
-            body: JSON.stringify({date})
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ date: selectedDate })
         })
-        .then(res => res.json())
-        .then(data => {
-            setAppointments(data);
-        })
-    }
+            .then(res => res.json())
+            .then(data => {
+                setAppointments(data);
+            })
+    }, [selectedDate])
+
     return (
         <section>
             <div style={conatinerStyle} className="container-fluid row">
-                <div className="col-md-2">
+                <div className="col-md-2 mr-5">
                     <Sidebar></Sidebar>
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-4">
                     <Calendar
                         onChange={handleDateChange}
                         value={new Date()}
                     />
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-4">
                     <AppointmentByDate appointments={appointments}></AppointmentByDate>
                 </div>
             </div>
